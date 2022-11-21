@@ -1,5 +1,5 @@
 {
-    "name": "hakam/multi-tenancy-bundle",
+    "name": "beautystack/multi-tenancy-bundle",
     "description": "Symfony bundle to extend doctrine to support db switcher and multi tenants",
     "type": "symfony-bundle",
     "license": "MIT",
