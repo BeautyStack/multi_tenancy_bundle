@@ -48,7 +48,7 @@ class TenantConnection extends Connection
         if ($this->isConnected) {
             return false;
         }
-        $this->_conn = $this->_driver->connect($this->params);
+        $this->_conn = $this->_driver->connect($this->params, $this->params['user'], $this->params['password']);
         $this->isConnected = true;
 
         if ($this->autoCommit === false) {
