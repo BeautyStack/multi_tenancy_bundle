@@ -137,11 +137,12 @@ hakam_multi_tenancy:
     tenant_migration_namespace: Application\Migrations\Tenant
     tenant_migration_path: migrations/Tenant
   tenant_entity_manager:                                        # tenant entity manger configuration , which is used to manage tenant entities
-    mapping:                                                  
-      type:   annotation                                        # mapping type default annotation                                                       
-      dir:   '%kernel.project_dir%/src/Entity/Tenant'           # directory of tenant entities, it could be different from main directory                                           
-      prefix: App\Entity\Tenant                                 # tenant entities prefix  ex "App\Entity\Tenant"
-      alias:   Tenant                                           # tenant entities alias  ex "Tenant"
+    mappings:
+      Tenant:                                                  
+        type:   annotation                                        # mapping type default annotation                                                       
+        dir:   '%kernel.project_dir%/src/Entity/Tenant'           # directory of tenant entities, it could be different from main directory                                           
+        prefix: App\Entity\Tenant                                 # tenant entities prefix  ex "App\Entity\Tenant"
+        alias:  Tenant                                           # tenant entities alias  ex "Tenant"
  ```
              
 ### Contribution

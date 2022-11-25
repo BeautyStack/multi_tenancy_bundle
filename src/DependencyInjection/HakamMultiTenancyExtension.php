@@ -40,6 +40,7 @@ class HakamMultiTenancyExtension extends Extension implements  PrependExtensionI
     {
         $configs = $container->getExtensionConfig($this->getAlias());
         $dbSwitcherConfig = $this->processConfiguration(new Configuration(), $configs);
+
         if (count($dbSwitcherConfig)  === 5) {
             $bundles = $container->getParameter('kernel.bundles');
             $tenantConnectionConfig = [
@@ -56,19 +57,23 @@ class HakamMultiTenancyExtension extends Extension implements  PrependExtensionI
                     ]
                 ]
             ];
+
+            $mappings = [];
+            foreach ($dbSwitcherConfig['tenant_entity_manager']['mappings'] as $key => $mapping)
+            {
+                $mappings[sprintf('HakamMultiTenancyBundle%s', $key)] = [
+                    'type' => $mapping['type'],
+                    'dir' => $mapping['dir'],
+                    'prefix' => $mapping['prefix']?? null,
+                    'alias' => $mapping['alias']?? null,
+                    'is_bundle' => $mapping['is_bundle']?? true,
+                ];
+            }
             $tenantEntityManagerConfig = [
                 'entity_managers' => [
                     'tenant' => [
                         'connection' => 'tenant',
-                        'mappings' => [
-                            'HakamMultiTenancyBundle' => [
-                                'type' => $dbSwitcherConfig['tenant_entity_manager']['mapping']['type'],
-                                'dir' => $dbSwitcherConfig['tenant_entity_manager']['mapping']['dir'],
-                                'prefix' => $dbSwitcherConfig['tenant_entity_manager']['mapping']['prefix']?? null,
-                                'alias' => $dbSwitcherConfig['tenant_entity_manager']['mapping']['alias']?? null,
-                                'is_bundle' => $dbSwitcherConfig['tenant_entity_manager']['mapping']['is_bundle']?? true,
-                            ]
-                        ]
+                        'mappings' => $mappings
                     ]
                 ]
             ];
@@ -85,7 +90,7 @@ class HakamMultiTenancyExtension extends Extension implements  PrependExtensionI
             }
 
             if (!isset($bundles['doctrine_migrations'])) {
-            //    $container->prependExtensionConfig('doctrine_migrations', ['migrations_paths' => $tenantDoctrineMigrationPath]);
+                //    $container->prependExtensionConfig('doctrine_migrations', ['migrations_paths' => $tenantDoctrineMigrationPath]);
                 $container->setParameter('tenant_doctrine_migration', ['migrations_paths' => $tenantDoctrineMigrationPath]);
             } else {
                 throw new InvalidConfigurationException('You need to enable Doctrine Migration Bundle to be able to use MultiTenancy Bundle');
